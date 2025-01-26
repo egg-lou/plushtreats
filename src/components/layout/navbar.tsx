@@ -1,4 +1,4 @@
-import { component$, useSignal, useTask$, $ } from '@builder.io/qwik';
+import { component$, useSignal, useVisibleTask$, $ } from '@builder.io/qwik';
 import { Link, useNavigate } from '@builder.io/qwik-city';
 
 interface CartItem {
@@ -23,7 +23,7 @@ const Navbar = component$(() => {
   });
 
   // Initialize cart from localStorage
-  useTask$(() => {
+  useVisibleTask$(() => {
     if (typeof window !== 'undefined') {
       updateCart();
 
@@ -31,6 +31,13 @@ const Navbar = component$(() => {
       window.addEventListener('cartUpdated', () => {
         updateCart();
       });
+
+      // Cleanup listener on unmount
+      return () => {
+        window.removeEventListener('cartUpdated', () => {
+          updateCart();
+        });
+      };
     }
   });
 
