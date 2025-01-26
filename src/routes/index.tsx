@@ -6,22 +6,25 @@ import ProductSection from "~/components/products/product-section";
 export default component$(() => {
   return (
     <>
-      <Hero />
-      <div className="mx-10 my-20">
-
-
-      <ProductSection />
+      <Hero 
+        image_url="/store.jpg" 
+        title="Cuddle Up with PlushTreats" 
+        content="Discover an enchanting collection of stuffed toys designed to bring joy, comfort, and a touch of magic to your life. Perfect for every age and every occasion!"
+        landing={true}
+      />
+      <div class="container mx-auto px-4 my-20" id="shop">
+        <ProductSection />
       </div>
     </>
   );
 });
 
 export const head: DocumentHead = {
-  title: "PlushTreats",
+  title: "plushtreats",
   meta: [
     {
-      name: "PlushTreats",
-      content: "PlushTreats is a website for buying plush toys",
+      name: "description",
+      content: "shop for adorable plush toys and stuffed animals",
     },
   ],
 };

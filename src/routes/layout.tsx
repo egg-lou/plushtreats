@@ -17,7 +17,7 @@ export default component$(() => {
   return (
     <>
       <Navbar />
-      <main className="mx-auto min-h-screen w-full">
+      <main class="mx-auto min-h-screen w-full">
         <Slot />
       </main>
       <Footer />

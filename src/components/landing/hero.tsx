@@ -1,28 +1,46 @@
 import { component$, $ } from "@builder.io/qwik";
+import { useNavigate } from '@builder.io/qwik-city';
 
-const Hero = component$(() => {
-    const scrollToSection = $(() => {
-        const section = document.getElementById('shop');
+interface HeroProps {
+    image_url: string;
+    title: string;
+    content: string;
+    landing?: boolean;
+}
 
-        if (section) {
-            section.scrollIntoView({ behavior: 'smooth'})
+const Hero = component$<HeroProps>(({ image_url, title, content, landing = false }) => {
+    const nav = useNavigate();
+
+    const handleAction = $(() => {
+        if (landing) {
+            const section = document.getElementById('shop');
+            if (section) {
+                section.scrollIntoView({ behavior: 'smooth' });
+            }
+        } else {
+            nav('/');
         }
-    })
+    });
 
     return (
         <div
-            className="hero min-h-screen"
+            class="hero min-h-[70vh] bg-base-200 bg-cover bg-center"
             style={{
-                backgroundImage: "url(/store.jpg)",
+                backgroundImage: `url(${image_url})`,
             }}>
-            <div className="hero-overlay bg-opacity-60"></div>
-            <div className="hero-content text-neutral-content text-center">
-                <div className="max-w-md">
-                    <h1 className="mb-5 text-5xl font-bold">Cuddle Up with PlushTreats</h1>
-                    <p className="mb-5">
-                        Discover an enchanting collection of stuffed toys designed to bring joy, comfort, and a touch of magic to your life. Perfect for every age and every occasion!
+            <div class="hero-overlay bg-opacity-60"></div>
+            <div class="hero-content text-neutral-content text-center">
+                <div class="max-w-md">
+                    <h1 class="mb-5 text-5xl font-bold">{title}</h1>
+                    <p class="mb-5">
+                        {content}
                     </p>
-                    <button className="btn btn-primary" onClick$={scrollToSection}>Explore Our Collection</button>
+                    <button 
+                        class="btn btn-primary" 
+                        onClick$={handleAction}
+                    >
+                        {landing ? 'Explore Our Collection' : 'Back to Home'}
+                    </button>
                 </div>
             </div>
         </div>
