@@ -1,6 +1,5 @@
 import { component$, useSignal, useTask$, $ } from '@builder.io/qwik';
 import { Link, useNavigate } from '@builder.io/qwik-city';
-import ImgPlushtreats from '~/media/plushTreats.png?jsx';
 
 interface CartItem {
   id: number;
