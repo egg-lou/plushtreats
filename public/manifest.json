@@ -1,0 +1,9 @@
+{
+  "$schema": "https://json.schemastore.org/web-manifest-combined.json",
+  "name": "plushtreats",
+  "short_name": "PlushTreats",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#fff",
+  "description": "PlushTreats is a website for buying plush toys"
+}
