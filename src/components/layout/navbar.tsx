@@ -19,7 +19,7 @@ const Navbar = component$(() => {
     const cart = JSON.parse(localStorage.getItem('cart') || '[]');
     cartItems.value = cart;
     cartTotal.value = cart.reduce((total: number, item: CartItem) => {
-      return total + (parseFloat(item.price) * item.quantity);
+      return total + parseFloat(item.price) * item.quantity;
     }, 0);
   });
 
@@ -27,7 +27,7 @@ const Navbar = component$(() => {
   useTask$(() => {
     if (typeof window !== 'undefined') {
       updateCart();
-      
+
       // Listen for cart updates
       window.addEventListener('cartUpdated', () => {
         updateCart();
@@ -47,7 +47,12 @@ const Navbar = component$(() => {
     <div class="navbar bg-base-100 fixed top-0 z-50 shadow-md">
       <div class="flex-1">
         <Link href="/" class="btn btn-ghost text-xl">
-          <img src="/plushTreats.png" alt="PlushTreats" class="h-16 w-16" loading='lazy'/>
+          <img
+            src="/plushTreats.png"
+            alt="PlushTreats"
+            class="h-16 w-16"
+            loading="lazy"
+          />
           <span class="text-xl font-bold">PlushTreats️</span>
         </Link>
       </div>
@@ -73,26 +78,42 @@ const Navbar = component$(() => {
                 />
               </svg>
               <span class="badge badge-sm indicator-item">
-                {cartItems.value.reduce((total, item) => total + item.quantity, 0)}
+                {cartItems.value.reduce(
+                  (total, item) => total + item.quantity,
+                  0
+                )}
               </span>
             </div>
           </div>
           <div
             tabIndex={0}
-            class="card card-compact dropdown-content bg-base-100 z-[1] mt-3 w-96 shadow-xl">
+            class="card card-compact dropdown-content bg-base-100 z-[1] mt-3 w-96 shadow-xl"
+          >
             <div class="card-body">
               <span class="text-lg font-bold">
-                {cartItems.value.reduce((total, item) => total + item.quantity, 0)} Items
+                {cartItems.value.reduce(
+                  (total, item) => total + item.quantity,
+                  0
+                )}{' '}
+                Items
               </span>
               <div class="max-h-96 overflow-auto">
-                {cartItems.value.map((item) => (
-                  <div key={item.id} class="flex justify-between items-center gap-4 mb-4">
+                {cartItems.value.map(item => (
+                  <div
+                    key={item.id}
+                    class="flex justify-between items-center gap-4 mb-4"
+                  >
                     <div>
                       <h3 class="font-bold">{item.name}</h3>
-                      <p class="text-sm text-gray-600">Quantity: {item.quantity}</p>
+                      <p class="text-sm text-gray-600">
+                        Quantity: {item.quantity}
+                      </p>
                     </div>
                     <div class="text-right">
-                      <p class="font-bold">{item.currency} {(parseFloat(item.price) * item.quantity).toFixed(2)}</p>
+                      <p class="font-bold">
+                        {item.currency}{' '}
+                        {(parseFloat(item.price) * item.quantity).toFixed(2)}
+                      </p>
                     </div>
                   </div>
                 ))}
@@ -103,7 +124,10 @@ const Navbar = component$(() => {
                 <span>PHP {cartTotal.value.toFixed(2)}</span>
               </div>
               <div class="card-actions">
-                <button class="btn btn-primary btn-block" onClick$={handleCheckout}>
+                <button
+                  class="btn btn-primary btn-block"
+                  onClick$={handleCheckout}
+                >
                   Checkout
                 </button>
               </div>

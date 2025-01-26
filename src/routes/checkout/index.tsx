@@ -1,4 +1,10 @@
-import { component$, useSignal, useVisibleTask$, $, useStore } from '@builder.io/qwik';
+import {
+  component$,
+  useSignal,
+  useVisibleTask$,
+  $,
+  useStore,
+} from '@builder.io/qwik';
 import { useNavigate } from '@builder.io/qwik-city';
 import { Link } from '@builder.io/qwik-city';
 
@@ -38,7 +44,7 @@ export default component$(() => {
   const toast = useSignal({ show: false, message: '', type: 'success' });
   const showConfirmation = useSignal(false);
   const modalRef = useSignal<HTMLDialogElement>();
-  
+
   const form = useStore<CheckoutForm>({
     firstName: '',
     lastName: '',
@@ -55,7 +61,7 @@ export default component$(() => {
   useVisibleTask$(() => {
     const cart = JSON.parse(localStorage.getItem('cart') || '[]');
     const savedOrders = JSON.parse(localStorage.getItem('orders') || '[]');
-    
+
     cartItems.value = cart;
     orders.value = savedOrders;
     cartTotal.value = cart.reduce((total: number, item: CartItem) => {
@@ -96,7 +102,15 @@ export default component$(() => {
   });
 
   const handleCheckout = $(async () => {
-    if (!form.firstName || !form.lastName || !form.email || !form.address || !form.city || !form.postalCode || !form.phone) {
+    if (
+      !form.firstName ||
+      !form.lastName ||
+      !form.email ||
+      !form.address ||
+      !form.city ||
+      !form.postalCode ||
+      !form.phone
+    ) {
       showToast('Please fill in all required fields', 'error');
       return;
     }
@@ -109,7 +123,7 @@ export default component$(() => {
     loading.value = true;
     showConfirmation.value = false;
     modalRef.value?.close();
-    
+
     try {
       const newOrder: Order = {
         id: Date.now().toString(),
@@ -154,14 +168,16 @@ export default component$(() => {
       {/* Toast Notification */}
       {toast.value.show && (
         <div class={`toast toast-top toast-end`}>
-          <div class={`alert ${toast.value.type === 'success' ? 'alert-success' : 'alert-error'}`}>
+          <div
+            class={`alert ${toast.value.type === 'success' ? 'alert-success' : 'alert-error'}`}
+          >
             <span>{toast.value.message}</span>
           </div>
         </div>
       )}
 
       {/* Order Confirmation Modal */}
-      <dialog 
+      <dialog
         ref={modalRef}
         class="modal modal-bottom sm:modal-middle"
         onClose$={() => {
@@ -174,16 +190,24 @@ export default component$(() => {
             <div class="bg-base-200 p-4 rounded-lg">
               <h4 class="font-semibold mb-2">Order Summary</h4>
               <div class="space-y-2">
-                {cartItems.value.map((item) => (
+                {cartItems.value.map(item => (
                   <div key={item.id} class="flex justify-between text-sm">
-                    <span>{item.name} x{item.quantity}</span>
-                    <span>{item.currency} {(parseFloat(item.price) * item.quantity).toFixed(2)}</span>
+                    <span>
+                      {item.name} x{item.quantity}
+                    </span>
+                    <span>
+                      {item.currency}{' '}
+                      {(parseFloat(item.price) * item.quantity).toFixed(2)}
+                    </span>
                   </div>
                 ))}
                 <div class="pt-2 border-t border-base-300">
                   <div class="flex justify-between font-bold">
                     <span>Total</span>
-                    <span>{cartItems.value[0]?.currency || 'PHP'} {cartTotal.value.toFixed(2)}</span>
+                    <span>
+                      {cartItems.value[0]?.currency || 'PHP'}{' '}
+                      {cartTotal.value.toFixed(2)}
+                    </span>
                   </div>
                 </div>
               </div>
@@ -192,17 +216,21 @@ export default component$(() => {
             <div class="bg-base-200 p-4 rounded-lg">
               <h4 class="font-semibold mb-2">Shipping Information</h4>
               <div class="space-y-1 text-sm">
-                <p>{form.firstName} {form.lastName}</p>
+                <p>
+                  {form.firstName} {form.lastName}
+                </p>
                 <p>{form.email}</p>
                 <p>{form.address}</p>
-                <p>{form.city}, {form.postalCode}</p>
+                <p>
+                  {form.city}, {form.postalCode}
+                </p>
                 <p>{form.phone}</p>
               </div>
             </div>
           </div>
 
           <div class="modal-action mt-6">
-            <button 
+            <button
               class="btn btn-ghost"
               onClick$={() => {
                 showConfirmation.value = false;
@@ -211,7 +239,7 @@ export default component$(() => {
             >
               Cancel
             </button>
-            <button 
+            <button
               class={`btn btn-primary ${loading.value ? 'loading' : ''}`}
               onClick$={confirmOrder}
               disabled={loading.value}
@@ -234,15 +262,15 @@ export default component$(() => {
               <div class="card-body">
                 <h2 class="card-title mb-4">My Orders</h2>
                 <div class="tabs tabs-boxed mb-4">
-                  <button 
+                  <button
                     class={`tab ${activeView.value === 'checkout' ? 'tab-active' : ''}`}
-                    onClick$={() => activeView.value = 'checkout'}
+                    onClick$={() => (activeView.value = 'checkout')}
                   >
                     Checkout
                   </button>
-                  <button 
+                  <button
                     class={`tab ${activeView.value === 'orders' ? 'tab-active' : ''}`}
-                    onClick$={() => activeView.value = 'orders'}
+                    onClick$={() => (activeView.value = 'orders')}
                   >
                     Orders
                   </button>
@@ -250,16 +278,24 @@ export default component$(() => {
 
                 {/* Recent Orders List */}
                 <div class="space-y-4 overflow-y-auto">
-                  {orders.value.map((order) => (
-                    <div key={order.id} class="card bg-base-200 cursor-pointer hover:bg-base-300" onClick$={() => activeView.value = 'orders'}>
+                  {orders.value.map(order => (
+                    <div
+                      key={order.id}
+                      class="card bg-base-200 cursor-pointer hover:bg-base-300"
+                      onClick$={() => (activeView.value = 'orders')}
+                    >
                       <div class="card-body p-4">
                         <div class="flex justify-between items-center">
-                          <span class="font-semibold">Order #{order.id.slice(-4)}</span>
+                          <span class="font-semibold">
+                            Order #{order.id.slice(-4)}
+                          </span>
                           <span class={`badge ${getStatusColor(order.status)}`}>
                             {order.status}
                           </span>
                         </div>
-                        <p class="text-sm">{new Date(order.date).toLocaleDateString()}</p>
+                        <p class="text-sm">
+                          {new Date(order.date).toLocaleDateString()}
+                        </p>
                         <p class="font-bold">PHP {order.total.toFixed(2)}</p>
                       </div>
                     </div>
@@ -275,7 +311,7 @@ export default component$(() => {
               <div class="card bg-base-100 shadow-xl">
                 <div class="card-body">
                   <h2 class="card-title mb-6">Checkout</h2>
-                  
+
                   {/* Cart Items */}
                   <div class="mb-8">
                     <h3 class="font-bold text-lg mb-4">Order Summary</h3>
@@ -288,24 +324,32 @@ export default component$(() => {
                       </div>
                     ) : (
                       <div class="divide-y">
-                        {cartItems.value.map((item) => (
+                        {cartItems.value.map(item => (
                           <div key={item.id} class="py-4">
                             <div class="flex justify-between items-center gap-4">
                               <div class="flex-1">
                                 <h4 class="font-semibold">{item.name}</h4>
-                                <p class="text-sm opacity-70">{item.currency} {item.price} each</p>
+                                <p class="text-sm opacity-70">
+                                  {item.currency} {item.price} each
+                                </p>
                               </div>
                               <div class="flex items-center gap-2">
                                 <button
                                   class="btn btn-square btn-sm"
-                                  onClick$={() => updateQuantity(item.id, item.quantity - 1)}
+                                  onClick$={() =>
+                                    updateQuantity(item.id, item.quantity - 1)
+                                  }
                                 >
                                   -
                                 </button>
-                                <span class="w-8 text-center">{item.quantity}</span>
+                                <span class="w-8 text-center">
+                                  {item.quantity}
+                                </span>
                                 <button
                                   class="btn btn-square btn-sm"
-                                  onClick$={() => updateQuantity(item.id, item.quantity + 1)}
+                                  onClick$={() =>
+                                    updateQuantity(item.id, item.quantity + 1)
+                                  }
                                 >
                                   +
                                 </button>
@@ -318,7 +362,10 @@ export default component$(() => {
                               </div>
                               <div class="text-right min-w-24">
                                 <p class="font-semibold">
-                                  {item.currency} {(parseFloat(item.price) * item.quantity).toFixed(2)}
+                                  {item.currency}{' '}
+                                  {(
+                                    parseFloat(item.price) * item.quantity
+                                  ).toFixed(2)}
                                 </p>
                               </div>
                             </div>
@@ -328,7 +375,8 @@ export default component$(() => {
                           <div class="flex justify-between items-center">
                             <span class="text-xl font-bold">Total</span>
                             <span class="text-xl font-bold">
-                              {cartItems.value[0]?.currency || 'PHP'} {cartTotal.value.toFixed(2)}
+                              {cartItems.value[0]?.currency || 'PHP'}{' '}
+                              {cartTotal.value.toFixed(2)}
                             </span>
                           </div>
                         </div>
@@ -338,7 +386,9 @@ export default component$(() => {
 
                   {cartItems.value.length > 0 && (
                     <>
-                      <h3 class="font-bold text-lg mb-4">Shipping Information</h3>
+                      <h3 class="font-bold text-lg mb-4">
+                        Shipping Information
+                      </h3>
                       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div class="form-control w-full">
                           <label class="label">
@@ -349,12 +399,18 @@ export default component$(() => {
                             type="text"
                             class={`input input-bordered w-full ${!form.firstName && 'input-error'}`}
                             value={form.firstName}
-                            onInput$={(e) => (form.firstName = (e.target as HTMLInputElement).value)}
+                            onInput$={e =>
+                              (form.firstName = (
+                                e.target as HTMLInputElement
+                              ).value)
+                            }
                             required
                           />
                           {!form.firstName && (
                             <label class="label">
-                              <span class="label-text-alt text-error">First name is required</span>
+                              <span class="label-text-alt text-error">
+                                First name is required
+                              </span>
                             </label>
                           )}
                         </div>
@@ -368,12 +424,18 @@ export default component$(() => {
                             type="text"
                             class={`input input-bordered w-full ${!form.lastName && 'input-error'}`}
                             value={form.lastName}
-                            onInput$={(e) => (form.lastName = (e.target as HTMLInputElement).value)}
+                            onInput$={e =>
+                              (form.lastName = (
+                                e.target as HTMLInputElement
+                              ).value)
+                            }
                             required
                           />
                           {!form.lastName && (
                             <label class="label">
-                              <span class="label-text-alt text-error">Last name is required</span>
+                              <span class="label-text-alt text-error">
+                                Last name is required
+                              </span>
                             </label>
                           )}
                         </div>
@@ -387,12 +449,18 @@ export default component$(() => {
                             type="email"
                             class={`input input-bordered w-full ${!form.email && 'input-error'}`}
                             value={form.email}
-                            onInput$={(e) => (form.email = (e.target as HTMLInputElement).value)}
+                            onInput$={e =>
+                              (form.email = (
+                                e.target as HTMLInputElement
+                              ).value)
+                            }
                             required
                           />
                           {!form.email && (
                             <label class="label">
-                              <span class="label-text-alt text-error">Email is required</span>
+                              <span class="label-text-alt text-error">
+                                Email is required
+                              </span>
                             </label>
                           )}
                         </div>
@@ -405,13 +473,19 @@ export default component$(() => {
                           <textarea
                             class={`textarea textarea-bordered w-full ${!form.address && 'textarea-error'}`}
                             value={form.address}
-                            onInput$={(e) => (form.address = (e.target as HTMLTextAreaElement).value)}
+                            onInput$={e =>
+                              (form.address = (
+                                e.target as HTMLTextAreaElement
+                              ).value)
+                            }
                             required
                             rows={3}
                           />
                           {!form.address && (
                             <label class="label">
-                              <span class="label-text-alt text-error">Address is required</span>
+                              <span class="label-text-alt text-error">
+                                Address is required
+                              </span>
                             </label>
                           )}
                         </div>
@@ -425,12 +499,16 @@ export default component$(() => {
                             type="text"
                             class={`input input-bordered w-full ${!form.city && 'input-error'}`}
                             value={form.city}
-                            onInput$={(e) => (form.city = (e.target as HTMLInputElement).value)}
+                            onInput$={e =>
+                              (form.city = (e.target as HTMLInputElement).value)
+                            }
                             required
                           />
                           {!form.city && (
                             <label class="label">
-                              <span class="label-text-alt text-error">City is required</span>
+                              <span class="label-text-alt text-error">
+                                City is required
+                              </span>
                             </label>
                           )}
                         </div>
@@ -444,12 +522,18 @@ export default component$(() => {
                             type="text"
                             class={`input input-bordered w-full ${!form.postalCode && 'input-error'}`}
                             value={form.postalCode}
-                            onInput$={(e) => (form.postalCode = (e.target as HTMLInputElement).value)}
+                            onInput$={e =>
+                              (form.postalCode = (
+                                e.target as HTMLInputElement
+                              ).value)
+                            }
                             required
                           />
                           {!form.postalCode && (
                             <label class="label">
-                              <span class="label-text-alt text-error">Postal code is required</span>
+                              <span class="label-text-alt text-error">
+                                Postal code is required
+                              </span>
                             </label>
                           )}
                         </div>
@@ -463,12 +547,18 @@ export default component$(() => {
                             type="tel"
                             class={`input input-bordered w-full ${!form.phone && 'input-error'}`}
                             value={form.phone}
-                            onInput$={(e) => (form.phone = (e.target as HTMLInputElement).value)}
+                            onInput$={e =>
+                              (form.phone = (
+                                e.target as HTMLInputElement
+                              ).value)
+                            }
                             required
                           />
                           {!form.phone && (
                             <label class="label">
-                              <span class="label-text-alt text-error">Phone is required</span>
+                              <span class="label-text-alt text-error">
+                                Phone is required
+                              </span>
                             </label>
                           )}
                         </div>
@@ -477,7 +567,9 @@ export default component$(() => {
                           <button
                             class={`btn btn-primary ${loading.value ? 'loading' : ''}`}
                             onClick$={handleCheckout}
-                            disabled={cartItems.value.length === 0 || loading.value}
+                            disabled={
+                              cartItems.value.length === 0 || loading.value
+                            }
                           >
                             {loading.value ? 'Processing...' : 'Place Order'}
                           </button>
@@ -494,31 +586,44 @@ export default component$(() => {
                   {orders.value.length === 0 ? (
                     <div class="text-center py-8">
                       <p class="text-lg opacity-70">No orders yet</p>
-                      <button 
+                      <button
                         class="btn btn-primary mt-4"
-                        onClick$={() => activeView.value = 'checkout'}
+                        onClick$={() => (activeView.value = 'checkout')}
                       >
                         Start Shopping
                       </button>
                     </div>
                   ) : (
                     <div class="space-y-6">
-                      {orders.value.map((order) => (
+                      {orders.value.map(order => (
                         <div key={order.id} class="card bg-base-200">
                           <div class="card-body">
                             <div class="flex justify-between items-center">
-                              <h3 class="font-bold">Order #{order.id.slice(-4)}</h3>
-                              <span class={`badge ${getStatusColor(order.status)}`}>
+                              <h3 class="font-bold">
+                                Order #{order.id.slice(-4)}
+                              </h3>
+                              <span
+                                class={`badge ${getStatusColor(order.status)}`}
+                              >
                                 {order.status}
                               </span>
                             </div>
-                            <p class="text-sm">{new Date(order.date).toLocaleDateString()}</p>
+                            <p class="text-sm">
+                              {new Date(order.date).toLocaleDateString()}
+                            </p>
                             <div class="divider"></div>
                             <div class="space-y-2">
-                              {order.items.map((item) => (
+                              {order.items.map(item => (
                                 <div key={item.id} class="flex justify-between">
-                                  <span>{item.name} x{item.quantity}</span>
-                                  <span>{item.currency} {(parseFloat(item.price) * item.quantity).toFixed(2)}</span>
+                                  <span>
+                                    {item.name} x{item.quantity}
+                                  </span>
+                                  <span>
+                                    {item.currency}{' '}
+                                    {(
+                                      parseFloat(item.price) * item.quantity
+                                    ).toFixed(2)}
+                                  </span>
                                 </div>
                               ))}
                             </div>
@@ -528,10 +633,18 @@ export default component$(() => {
                               <span>PHP {order.total.toFixed(2)}</span>
                             </div>
                             <div class="mt-4">
-                              <h4 class="font-semibold mb-2">Shipping Information</h4>
-                              <p>{order.shippingInfo.firstName} {order.shippingInfo.lastName}</p>
+                              <h4 class="font-semibold mb-2">
+                                Shipping Information
+                              </h4>
+                              <p>
+                                {order.shippingInfo.firstName}{' '}
+                                {order.shippingInfo.lastName}
+                              </p>
                               <p>{order.shippingInfo.address}</p>
-                              <p>{order.shippingInfo.city}, {order.shippingInfo.postalCode}</p>
+                              <p>
+                                {order.shippingInfo.city},{' '}
+                                {order.shippingInfo.postalCode}
+                              </p>
                               <p>{order.shippingInfo.phone}</p>
                               <p>{order.shippingInfo.email}</p>
                             </div>

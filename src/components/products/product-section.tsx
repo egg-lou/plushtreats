@@ -14,10 +14,10 @@ export default component$(() => {
     searchQuery: '',
     priceRange: {
       min: 0,
-      max: Math.max(...productData.map(p => parseFloat(p.price)))
+      max: Math.max(...productData.map(p => parseFloat(p.price))),
     },
     showInStock: false,
-    sortBy: 'popularity-high'
+    sortBy: 'popularity-high',
   });
 
   const showMobileFilters = useSignal(false);
@@ -30,23 +30,21 @@ export default component$(() => {
     if (store.searchQuery) {
       const query = store.searchQuery.toLowerCase();
       filtered = filtered.filter(
-        (product) =>
+        product =>
           product.name.toLowerCase().includes(query) ||
           product.description.toLowerCase().includes(query)
       );
     }
 
     // Apply price filter
-    filtered = filtered.filter(
-      (product) => {
-        const price = parseFloat(product.price);
-        return price >= store.priceRange.min && price <= store.priceRange.max;
-      }
-    );
+    filtered = filtered.filter(product => {
+      const price = parseFloat(product.price);
+      return price >= store.priceRange.min && price <= store.priceRange.max;
+    });
 
     // Apply stock filter
     if (store.showInStock) {
-      filtered = filtered.filter((product) => product.stock > 0);
+      filtered = filtered.filter(product => product.stock > 0);
     }
 
     // Create a new array for sorting to avoid mutation issues
@@ -105,11 +103,11 @@ export default component$(() => {
   // Initialize price range and filters
   useTask$(({ track }) => {
     track(() => store.products);
-    
+
     const prices = store.products.map(p => parseFloat(p.price));
     store.priceRange = {
       min: Math.min(...prices),
-      max: Math.max(...prices)
+      max: Math.max(...prices),
     };
     updateFilters();
   });
@@ -127,7 +125,7 @@ export default component$(() => {
         name: product.name,
         price: product.price,
         currency: product.currency,
-        quantity: quantity
+        quantity: quantity,
       });
     }
 
@@ -142,14 +140,16 @@ export default component$(() => {
         <div class="md:hidden w-full">
           <SearchFilter
             searchQuery={store.searchQuery}
-            onSearch$={(query) => {
+            onSearch$={query => {
               store.searchQuery = query;
               updateFilters();
             }}
           />
           <button
             class="btn btn-ghost w-full mt-2 flex items-center justify-between"
-            onClick$={() => showMobileFilters.value = !showMobileFilters.value}
+            onClick$={() =>
+              (showMobileFilters.value = !showMobileFilters.value)
+            }
           >
             <span>Filters</span>
             <svg
@@ -159,13 +159,18 @@ export default component$(() => {
               viewBox="0 0 24 24"
               stroke="currentColor"
             >
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M19 9l-7 7-7-7"
+              />
             </svg>
           </button>
         </div>
 
         {/* Filters Section */}
-        <div 
+        <div
           class={`
             md:w-64 space-y-4 bg-base-100 p-4 rounded-lg
             ${showMobileFilters.value ? 'block' : 'hidden'}
@@ -176,7 +181,7 @@ export default component$(() => {
           <div class="hidden md:block">
             <SearchFilter
               searchQuery={store.searchQuery}
-              onSearch$={(query) => {
+              onSearch$={query => {
                 store.searchQuery = query;
                 updateFilters();
               }}
@@ -185,7 +190,7 @@ export default component$(() => {
 
           <PriceFilter
             priceRange={store.priceRange}
-            onPriceChange$={(range) => {
+            onPriceChange$={range => {
               store.priceRange = range;
               updateFilters();
             }}
@@ -193,7 +198,7 @@ export default component$(() => {
 
           <StockFilter
             showInStock={store.showInStock}
-            onStockChange$={(show) => {
+            onStockChange$={show => {
               store.showInStock = show;
               updateFilters();
             }}
@@ -201,7 +206,7 @@ export default component$(() => {
 
           <SortFilter
             sortBy={store.sortBy}
-            onSortChange$={(sort) => {
+            onSortChange$={sort => {
               console.log('Sort changed to:', sort); // Debug log
               store.sortBy = sort;
               updateFilters();
@@ -212,7 +217,7 @@ export default component$(() => {
         {/* Products Grid */}
         <div class="flex-1">
           <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {store.filteredProducts.map((product) => (
+            {store.filteredProducts.map(product => (
               <ProductCard
                 key={product.id}
                 product={product}
