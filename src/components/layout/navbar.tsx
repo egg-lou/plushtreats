@@ -1,5 +1,6 @@
-import { component$, useSignal, useVisibleTask$, $ } from '@builder.io/qwik';
+import { component$, useSignal, useTask$, $ } from '@builder.io/qwik';
 import { Link, useNavigate } from '@builder.io/qwik-city';
+import ImgPlushtreats from '~/media/plushTreats.png?jsx';
 
 interface CartItem {
   id: number;
@@ -23,13 +24,15 @@ const Navbar = component$(() => {
   });
 
   // Initialize cart from localStorage
-  useVisibleTask$(() => {
-    updateCart();
-    
-    // Listen for cart updates
-    window.addEventListener('cartUpdated', () => {
+  useTask$(() => {
+    if (typeof window !== 'undefined') {
       updateCart();
-    });
+      
+      // Listen for cart updates
+      window.addEventListener('cartUpdated', () => {
+        updateCart();
+      });
+    }
   });
 
   const handleCheckout = $(() => {
